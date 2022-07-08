@@ -48,18 +48,18 @@ function prandomHash(i, min, max){
   function p4_initialize(inspiration) {
     
       let initial = {};
-      resizeCanvas(inspiration.image.width / 4, inspiration.image.height / 4);
-      if (inspiration.name = "daisy"){
+      resizeCanvas(inspiration.image.width/2, inspiration.image.height/2);
+      if (inspiration.name == "daisy"){
         initial = {type: "daisy", r_range:{max: 100, min: 20}, opa_range:{min: 128, max: 255}, intervals: 5, 
                 sample_x: {min: 0, max: 1}, sample_y:{min: 0, max: 1}, c_range:{min: 0, max: 10}};    
       }
     
-      if (inspiration.name = "lily"){
+      if (inspiration.name == "lily"){
         initial = {type: "lily", r_range:{max: 100, min: 20}, opa_range:{min: 128, max: 255}, intervals: 3, 
                 sample_x: {min: 0, max: 1}, sample_y:{min: 0, max: 1}, c_range:{min: 0, max: 10}};    
       }
     
-      if (inspiration.name = "rose"){
+      if (inspiration.name == "rose"){
         initial = {type: "rose", r_range:{max: 100, min: 5}, opa_range:{min: 128, max: 255}, intervals: 4, 
                 sample_x: {min: 0, max: 1}, sample_y:{min: 0, max: 1}, c_range:{min: 1, max: 10}};    
       }
@@ -72,7 +72,7 @@ function prandomHash(i, min, max){
     background(255);
     noStroke();
     
-    scale(0.25);
+    scale(0.5);
     let iw = inspiration.image.width / design.intervals;
     let ih = inspiration.image.height / design.intervals;
     let [x, y] = [0,0];
@@ -90,7 +90,7 @@ function prandomHash(i, min, max){
           //console.log(px_color)
           px_color[3] = random(design.opa_range.min, design.opa_range.max);
           fill(px_color);
-          circle(random(x, x + iw), random(y, y + ih), random(design.r_range.min, design.r_range.max));
+          circle(random(x, x+iw), random(y, y+ih), 13);
         }
         y += ih;
       }
