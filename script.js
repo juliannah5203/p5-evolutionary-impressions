@@ -6,24 +6,6 @@
 // https://www.gardeningknowhow.com/wp-content/uploads/2019/11/red-rose-1024x678.jpg
 
 
-function prandomHash(i, min, max){
-    randomSeed(i*20);
-    if (max == undefined){
-      max = min;
-      min = 0;
-    }
-      
-    return random(1) * (max - min) + min;
-  }
-  
-  function randomHash(i, min, max){
-    return prandomHash(prandomHash(i, max+min), min, max);
-  }
-  const MAX_R = {daisy: 150, lily: 150, rose: 50};
-  const MIN_R = {daisy: 20, lily: 10, rose: 5};
-  
-  const MAX_C = {daisy: 25, lily: 20, rose: 50};
-  const MIN_C = {daisy: 0, lily: 1, rose: 1};
   
   function p4_inspirations() {
     let inspiration = [];
@@ -118,7 +100,7 @@ function prandomHash(i, min, max){
   
   function p4_mutate(design, inspiration, rate) {
     //console.log(design.min_r, MIN_R[design.type], design.max_r, rate)
-    design.r_range = gen_mut_param(design.r_range, MIN_R[design.type], MAX_R[design.type], rate);
+    design.r_range = gen_mut_param(design.r_range, 5, 200, rate);
    // console.log(design.r_range)
   
   
@@ -129,7 +111,7 @@ function prandomHash(i, min, max){
     design.sample_x = gen_mut_param(design.sample_x, 0, 1, rate);
     design.sample_y = gen_mut_param(design.sample_y, 0, 1, rate);
     
-    design.c_range = gen_mut_param(design.c_range, MIN_C[design.type], MAX_C[design.type], rate);
+    design.c_range = gen_mut_param(design.c_range, 0, 20, rate);
   }
   
   
