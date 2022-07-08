@@ -32,15 +32,15 @@ function p4_inspirations() {
       let initial = {};
       resizeCanvas(inspiration.image.width/2, inspiration.image.height/2);
       if (inspiration.name == "daisy"){
-        initial = {type: "daisy", opacity:{min: 0, max: 255}, intervals: 3};    
+        initial = {type: "daisy", opacity:{min: 0.1, max: 1}, intervals: 10};    
       }
     
       if (inspiration.name == "lily"){
-        initial = {type: "lily", opacity:{min: 128, max: 255}, intervals: 3};    
+        initial = {type: "lily", opacity:{min: 0.1, max: 1}, intervals: 10};    
       }
     
       if (inspiration.name == "rose"){
-        initial = {type: "rose", opacity:{min: 128, max: 255}, intervals: 3};    
+        initial = {type: "rose", opacity:{min: 0.1, max: 1}, intervals: 10};    
       }
   
       return initial;
@@ -50,52 +50,45 @@ function p4_inspirations() {
     push();
     background(0);
     noStroke();
-    
     scale(0.5);
-    let ix = inspiration.image.width / design.intervals;
-    let iy = inspiration.image.height / design.intervals;
+    let xStep = inspiration.image.width / design.intervals;
+    let yStep = inspiration.image.height / design.intervals;
     let [x, y] = [0,0];
-    
     for (let i = 0; i < design.intervals; i++){
       y = 0;
-      
       for (let j = 0; j < design.intervals; j++){
-        let k = random(0,11);
-        for (let n = 0; n < k; n++){
-  
-          
-          let px_color = inspiration.image.get(x+ix, y+iy);
-          //console.log(px_color)
-          px_color[3] = random(design.opacity.min, design.opacity.max);
-          fill(px_color);
-          square(random(x, x+ix), random(y, y+iy), 10);
+        
+        for (let n = 0; n < random(5,20); n++){
+          let pxColor = inspiration.image.get(x+xStep, y+yStep);
+          pxColor[4] = random(design.opacity.min, design.opacity.max);
+          fill(pxColor);
+          square(random(x, x+xStep), random(y, y+yStep), 10);
         }
-        y += iy;
+        y += yStep;
       }
-      x += ix;
+      x += xStep;
     }
     pop();
-    //console.log(x, y)
+
   }
+
   
-  function helper(num, min, max, rate) {
-    return constrain(randomGaussian(num, (rate * (max - min)) / 20), min, max);
-  }
-  
-  
-  function controller(param, mn, mx, rate){
-    let i = helper(param.min, mn, param.max, rate);
-    let j = helper(param.max, param.min, mx, rate);
-    param.max = max(i, j);
-    param.min = min(i, j);
+  function opaController(param, mx, rate){
+    param.max = rate*param.max;
+    if(param.max < 0.3){
+      param.max = 0.3 + random(min(rate*param.max,mx));
+      param.min = 0.1;
+    }
     return param;
+  }
+  function intController(mn, mx, rate){
+    return random(rate*mn, rate*mx);
   }
   
   function p4_mutate(design, inspiration, rate) {
-  
-    design.opacity = controller(design.opacity, 0, 255, rate);
-  
-    design.intervals =  floor(helper(design.intervals, 2, 50, rate));
+
+    design.opacity = opaController(design.opacity, 1, rate);
+    design.intervals = intController(10, 50, rate);
 
     
   
