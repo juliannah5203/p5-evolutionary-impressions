@@ -7,7 +7,7 @@
 
 
 function prandomHash(i, min, max){
-    randomSeed(i*200);
+    randomSeed(i*20);
     if (max == undefined){
       max = min;
       min = 0;
@@ -90,7 +90,7 @@ function prandomHash(i, min, max){
           //console.log(px_color)
           px_color[3] = random(design.opa_range.min, design.opa_range.max);
           fill(px_color);
-          circle(random(x, x+iw), random(y, y+ih), 13);
+          square(random(x, x+iw), random(y, y+ih), 10);
         }
         y += ih;
       }
