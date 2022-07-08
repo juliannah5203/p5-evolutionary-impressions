@@ -1,5 +1,5 @@
 
-/* exported p4_inspirations, p4_initialize, p4_render, p4_mutate */
+/* exported p4_inspirations, p4_initialize, p4_render, p4_helperate */
 
 // https://cdn.britannica.com/45/5645-050-B9EC0205/head-treasure-flower-disk-flowers-inflorescence-ray.jpg
 // https://www.gardendesign.com/pictures/images/675x529Max/site_3/asiatic-lily-cappuccino-lily-creative-commons_11653.jpg
@@ -7,7 +7,7 @@
 
 
   
-  function p4_inspirations() {
+function p4_inspirations() {
     let inspiration = [];
   
     inspiration[0] = {
@@ -32,18 +32,15 @@
       let initial = {};
       resizeCanvas(inspiration.image.width/2, inspiration.image.height/2);
       if (inspiration.name == "daisy"){
-        initial = {type: "daisy", r_range:{max: 100, min: 20}, opa_range:{min: 128, max: 255}, intervals: 5, 
-                sample_x: {min: 0, max: 1}, sample_y:{min: 0, max: 1}, c_range:{min: 0, max: 10}};    
+        initial = {type: "daisy", opacity:{min: 0, max: 255}, intervals: 3};    
       }
     
       if (inspiration.name == "lily"){
-        initial = {type: "lily", r_range:{max: 100, min: 20}, opa_range:{min: 128, max: 255}, intervals: 3, 
-                sample_x: {min: 0, max: 1}, sample_y:{min: 0, max: 1}, c_range:{min: 0, max: 10}};    
+        initial = {type: "lily", opacity:{min: 128, max: 255}, intervals: 3};    
       }
     
       if (inspiration.name == "rose"){
-        initial = {type: "rose", r_range:{max: 100, min: 5}, opa_range:{min: 128, max: 255}, intervals: 4, 
-                sample_x: {min: 0, max: 1}, sample_y:{min: 0, max: 1}, c_range:{min: 1, max: 10}};    
+        initial = {type: "rose", opacity:{min: 128, max: 255}, intervals: 3};    
       }
   
       return initial;
@@ -51,67 +48,57 @@
   
   function p4_render(design, inspiration) {
     push();
-    background(255);
+    background(0);
     noStroke();
     
     scale(0.5);
-    let iw = inspiration.image.width / design.intervals;
-    let ih = inspiration.image.height / design.intervals;
+    let ix = inspiration.image.width / design.intervals;
+    let iy = inspiration.image.height / design.intervals;
     let [x, y] = [0,0];
     
     for (let i = 0; i < design.intervals; i++){
-      //console.log(x);
       y = 0;
+      
       for (let j = 0; j < design.intervals; j++){
-        let k = floor(random(design.c_range.min, design.c_range.max+1));
+        let k = random(0,11);
         for (let n = 0; n < k; n++){
-          let sx = random(x + design.sample_x.min * iw, x + design.sample_x.max * iw);
-          let sy = random(y + design.sample_y.min * ih, y + design.sample_x.max * ih);
+  
           
-          let px_color = inspiration.image.get(sx, sy);
+          let px_color = inspiration.image.get(x+ix, y+iy);
           //console.log(px_color)
-          px_color[3] = random(design.opa_range.min, design.opa_range.max);
+          px_color[3] = random(design.opacity.min, design.opacity.max);
           fill(px_color);
-          square(random(x, x+iw), random(y, y+ih), 10);
+          square(random(x, x+ix), random(y, y+iy), 10);
         }
-        y += ih;
+        y += iy;
       }
-      x += iw;
+      x += ix;
     }
     pop();
     //console.log(x, y)
   }
   
-  function mut(num, min, max, rate) {
+  function helper(num, min, max, rate) {
     return constrain(randomGaussian(num, (rate * (max - min)) / 20), min, max);
   }
   
   
-  
-  const INIT_INTERVALS = 8;
-  
-  function gen_mut_param(param, mn, mx, rate){
-    let i = mut(param.min, mn, param.max, rate);
-    let j = mut(param.max, param.min, mx, rate);
+  function controller(param, mn, mx, rate){
+    let i = helper(param.min, mn, param.max, rate);
+    let j = helper(param.max, param.min, mx, rate);
     param.max = max(i, j);
     param.min = min(i, j);
     return param;
   }
   
   function p4_mutate(design, inspiration, rate) {
-    //console.log(design.min_r, MIN_R[design.type], design.max_r, rate)
-    design.r_range = gen_mut_param(design.r_range, 5, 200, rate);
-   // console.log(design.r_range)
   
+    design.opacity = controller(design.opacity, 0, 255, rate);
   
-    design.opa_range = gen_mut_param(design.opa_range, 0, 255, rate);
-  
-    design.intervals =  floor(mut(design.intervals, 2, 20, rate));
-    //console.log(design.intervals)
-    design.sample_x = gen_mut_param(design.sample_x, 0, 1, rate);
-    design.sample_y = gen_mut_param(design.sample_y, 0, 1, rate);
+    design.intervals =  floor(helper(design.intervals, 2, 50, rate));
+
     
-    design.c_range = gen_mut_param(design.c_range, 0, 20, rate);
+  
   }
   
   
