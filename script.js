@@ -53,20 +53,21 @@ function p4_inspirations() {
     scale(0.5);
     let xStep = inspiration.image.width / design.intervals;
     let yStep = inspiration.image.height / design.intervals;
-    let [x, y] = [0,0];
+    let xCoor = 0;
+    let yCoor = 0;
     for (let i = 0; i < design.intervals; i++){
-      y = 0;
+      yCoor = 0;
       for (let j = 0; j < design.intervals; j++){
         
         for (let n = 0; n < random(5,20); n++){
-          let pxColor = inspiration.image.get(x+xStep, y+yStep);
+          let pxColor = inspiration.image.get(xCoor+xStep, yCoor+yStep);
           pxColor[4] = random(design.opacity.min, design.opacity.max);
           fill(pxColor);
-          square(random(x, x+xStep), random(y, y+yStep), 10);
+          square(random(xCoor, xCoor+xStep), random(yCoor, yCoor+yStep), random(7,12));
         }
-        y += yStep;
+        yCoor += yStep;
       }
-      x += xStep;
+      xCoor += xStep;
     }
     pop();
 
